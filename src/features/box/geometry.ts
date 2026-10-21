@@ -19,3 +19,30 @@ export function foldAngles(fold: number) {
     flap: ease(0.62, 1, fold) * q,
   };
 }
+
+// --- Les charnières : une seule description, utilisée par l'affichage et par l'export ---
+export interface Hinge {
+  hinge: keyof ReturnType<typeof foldAngles>; // "walls" | "lid" | "flap"
+  axis: "x" | "z";
+  sign: 1 | -1;
+}
+
+export const HINGES: Record<
+  "front" | "back" | "right" | "left" | "lid" | "flap",
+  Hinge
+> = {
+  front: { hinge: "walls", axis: "x", sign: -1 },
+  back: { hinge: "walls", axis: "x", sign: 1 },
+  right: { hinge: "walls", axis: "z", sign: 1 },
+  left: { hinge: "walls", axis: "z", sign: -1 },
+  lid: { hinge: "lid", axis: "x", sign: 1 },
+  flap: { hinge: "flap", axis: "x", sign: 1 },
+};
+
+export function hingeRotation(
+  h: Hinge,
+  fold: number,
+): [number, number, number] {
+  const angle = foldAngles(fold)[h.hinge] * h.sign;
+  return h.axis === "x" ? [angle, 0, 0] : [0, 0, angle];
+}

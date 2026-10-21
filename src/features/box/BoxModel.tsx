@@ -1,11 +1,13 @@
-import { useMemo } from "react";
-import { MeshStandardMaterial, type Texture } from "three";
+import { useMemo, type Ref } from "react";
+import { MeshStandardMaterial, type Group, type Texture } from "three";
 import type { BoxParams } from "./types";
-import { thickness, flapLength, foldAngles } from "./geometry";
+import { thickness, flapLength, HINGES, hingeRotation } from "./geometry";
 import type { FaceTextures } from "../print/useFaceTextures";
 
 type Vec3 = [number, number, number];
 
+// Ordre des faces d'une BoxGeometry : +x, -x, +y, -y, +z, -z
+// -y = extérieur imprimé, +y = intérieur brun, le reste = tranche du carton
 function Panel({
   size,
   position,
@@ -35,19 +37,17 @@ function Panel({
   );
 }
 
-export function BoxModel({
-  params,
-  fold,
-  textures,
-}: {
+interface BoxModelProps {
   params: BoxParams;
   fold: number; // 0 = à plat, 1 = fermée
   textures: FaceTextures;
-}) {
+  ref?: Ref<Group>;
+}
+
+export function BoxModel({ params, fold, textures, ref }: BoxModelProps) {
   const { length: L, width: W, height: H } = params;
   const t = thickness(params);
   const F = flapLength(params);
-  const a = foldAngles(fold);
   const lidLen = W + 2 * t;
 
   const inner = useMemo(
@@ -60,8 +60,14 @@ export function BoxModel({
   );
   const shared = { inner, edge };
 
+  // Rotation + description de chaque charnière
+  const hinge = (name: keyof typeof HINGES) => ({
+    rotation: hingeRotation(HINGES[name], fold),
+    userData: HINGES[name],
+  });
+
   return (
-    <group scale={0.001} position={[0, (t / 2) * 0.001, 0]}>
+    <group ref={ref} scale={0.001} position={[0, (t / 2) * 0.001, 0]}>
       <Panel
         size={[L, t, W]}
         position={[0, 0, 0]}
@@ -69,7 +75,7 @@ export function BoxModel({
         {...shared}
       />
 
-      <group position={[0, 0, W / 2]} rotation-x={-a.walls}>
+      <group position={[0, 0, W / 2]} {...hinge("front")}>
         <Panel
           size={[L, t, H]}
           position={[0, 0, H / 2]}
@@ -78,21 +84,21 @@ export function BoxModel({
         />
       </group>
 
-      <group position={[0, 0, -W / 2]} rotation-x={a.walls}>
+      <group position={[0, 0, -W / 2]} {...hinge("back")}>
         <Panel
           size={[L, t, H]}
           position={[0, 0, -H / 2]}
           map={textures.back}
           {...shared}
         />
-        <group position={[0, 0, -H]} rotation-x={a.lid}>
+        <group position={[0, 0, -H]} {...hinge("lid")}>
           <Panel
             size={[L, t, lidLen]}
             position={[0, 0, -lidLen / 2]}
             map={textures.lid}
             {...shared}
           />
-          <group position={[0, 0, -lidLen]} rotation-x={a.flap}>
+          <group position={[0, 0, -lidLen]} {...hinge("flap")}>
             <Panel
               size={[L, t, F]}
               position={[0, 0, -F / 2]}
@@ -103,7 +109,7 @@ export function BoxModel({
         </group>
       </group>
 
-      <group position={[L / 2, 0, 0]} rotation-z={a.walls}>
+      <group position={[L / 2, 0, 0]} {...hinge("right")}>
         <Panel
           size={[H, t, W]}
           position={[H / 2, 0, 0]}
@@ -111,7 +117,7 @@ export function BoxModel({
           {...shared}
         />
       </group>
-      <group position={[-L / 2, 0, 0]} rotation-z={-a.walls}>
+      <group position={[-L / 2, 0, 0]} {...hinge("left")}>
         <Panel
           size={[H, t, W]}
           position={[-H / 2, 0, 0]}

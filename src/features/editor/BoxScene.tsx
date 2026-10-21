@@ -3,6 +3,7 @@ import { useImage } from "../print/useImage";
 import { useFaceTextures } from "../print/useFaceTextures";
 import { BoxModel } from "../box/BoxModel";
 import type { Design } from "../box/types";
+import { boxRoot } from "../ar/boxRef";
 
 export function BoxScene() {
   const box = useEditor((s) => s.box);
@@ -26,5 +27,7 @@ export function BoxScene() {
   };
 
   const textures = useFaceTextures(box, design);
-  return <BoxModel params={box} fold={fold} textures={textures} />;
+  return (
+    <BoxModel ref={boxRoot} params={box} fold={fold} textures={textures} />
+  );
 }
