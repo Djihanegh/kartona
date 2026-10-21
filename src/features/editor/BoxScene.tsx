@@ -7,6 +7,7 @@ import type { Design } from "../box/types";
 export function BoxScene() {
   const box = useEditor((s) => s.box);
   const d = useEditor((s) => s.design);
+  const fold = useEditor((s) => s.fold);
   const logo = useImage(d.logoUrl ?? undefined);
 
   const design: Design = {
@@ -19,5 +20,5 @@ export function BoxScene() {
   };
 
   const textures = useFaceTextures(box, design);
-  return <BoxModel params={box} textures={textures} />;
+  return <BoxModel params={box} fold={fold} textures={textures} />;
 }

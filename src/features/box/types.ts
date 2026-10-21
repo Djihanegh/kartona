@@ -6,7 +6,7 @@ export interface BoxParams {
   width: number; // mm
   height: number; // mm
   flute: Flute;
-  fold: number; // 0 = à plat, 1 = fermée
+  //fold: number; // 0 = à plat, 1 = fermée
 }
 
 export const FLUTE_THICKNESS: Record<Flute, number> = { E: 1.5, B: 3 };

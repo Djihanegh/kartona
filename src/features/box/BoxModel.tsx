@@ -37,15 +37,17 @@ function Panel({
 
 export function BoxModel({
   params,
+  fold,
   textures,
 }: {
   params: BoxParams;
+  fold: number; // 0 = à plat, 1 = fermée
   textures: FaceTextures;
 }) {
   const { length: L, width: W, height: H } = params;
   const t = thickness(params);
   const F = flapLength(params);
-  const a = foldAngles(params.fold);
+  const a = foldAngles(fold);
   const lidLen = W + 2 * t;
 
   const inner = useMemo(

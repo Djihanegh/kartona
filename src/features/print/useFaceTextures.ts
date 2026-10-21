@@ -14,7 +14,7 @@ export function useFaceTextures(
   const { substrate, brand, inkColor, process, logo, logoScale } = design;
 
   const textures = useMemo(() => {
-    const specs = faceSpecs({ length, width, height, flute, fold: 1 });
+    const specs = faceSpecs({ length, width, height, flute });
     const out = {} as FaceTextures;
     for (const id of Object.keys(specs) as FaceId[]) {
       const tex = new CanvasTexture(
