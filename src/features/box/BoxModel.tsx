@@ -1,54 +1,121 @@
+import { useMemo } from "react";
+import { MeshStandardMaterial, type Texture } from "three";
 import type { BoxParams } from "./types";
 import { thickness, flapLength, foldAngles } from "./geometry";
-
-const KRAFT = "#b38956";
+import type { FaceTextures } from "../print/useFaceTextures";
 
 type Vec3 = [number, number, number];
 
-function Panel({ size, position }: { size: Vec3; position: Vec3 }) {
+function Panel({
+  size,
+  position,
+  map,
+  inner,
+  edge,
+}: {
+  size: Vec3;
+  position: Vec3;
+  map: Texture;
+  inner: MeshStandardMaterial;
+  edge: MeshStandardMaterial;
+}) {
+  const outer = useMemo(
+    () => new MeshStandardMaterial({ map, roughness: 0.9 }),
+    [map],
+  );
   return (
-    <mesh position={position} castShadow receiveShadow>
+    <mesh
+      position={position}
+      castShadow
+      receiveShadow
+      material={[edge, edge, inner, outer, edge, edge]}
+    >
       <boxGeometry args={size} />
-      <meshStandardMaterial color={KRAFT} roughness={0.9} />
     </mesh>
   );
 }
 
-export function BoxModel({ params }: { params: BoxParams }) {
+export function BoxModel({
+  params,
+  textures,
+}: {
+  params: BoxParams;
+  textures: FaceTextures;
+}) {
   const { length: L, width: W, height: H } = params;
   const t = thickness(params);
   const F = flapLength(params);
   const a = foldAngles(params.fold);
   const lidLen = W + 2 * t;
 
-  return (
-    // Les mm sont convertis en mètres : indispensable pour l'AR à taille réelle
-    <group scale={0.001} position={[0, (t / 2) * 0.001, 0]}>
-      {/* Fond */}
-      <Panel size={[L, t, W]} position={[0, 0, 0]} />
+  const inner = useMemo(
+    () => new MeshStandardMaterial({ color: "#bb9262", roughness: 0.95 }),
+    [],
+  );
+  const edge = useMemo(
+    () => new MeshStandardMaterial({ color: "#8a6942", roughness: 1 }),
+    [],
+  );
+  const shared = { inner, edge };
 
-      {/* Face avant */}
+  return (
+    <group scale={0.001} position={[0, (t / 2) * 0.001, 0]}>
+      <Panel
+        size={[L, t, W]}
+        position={[0, 0, 0]}
+        map={textures.bottom}
+        {...shared}
+      />
+
       <group position={[0, 0, W / 2]} rotation-x={-a.walls}>
-        <Panel size={[L, t, H]} position={[0, 0, H / 2]} />
+        <Panel
+          size={[L, t, H]}
+          position={[0, 0, H / 2]}
+          map={textures.front}
+          {...shared}
+        />
       </group>
 
-      {/* Face arrière, puis couvercle et rabat */}
       <group position={[0, 0, -W / 2]} rotation-x={a.walls}>
-        <Panel size={[L, t, H]} position={[0, 0, -H / 2]} />
+        <Panel
+          size={[L, t, H]}
+          position={[0, 0, -H / 2]}
+          map={textures.back}
+          {...shared}
+        />
         <group position={[0, 0, -H]} rotation-x={a.lid}>
-          <Panel size={[L, t, lidLen]} position={[0, 0, -lidLen / 2]} />
+          <Panel
+            size={[L, t, lidLen]}
+            position={[0, 0, -lidLen / 2]}
+            map={textures.lid}
+            {...shared}
+          />
           <group position={[0, 0, -lidLen]} rotation-x={a.flap}>
-            <Panel size={[L, t, F]} position={[0, 0, -F / 2]} />
+            <Panel
+              size={[L, t, F]}
+              position={[0, 0, -F / 2]}
+              map={textures.flap}
+              {...shared}
+            />
           </group>
         </group>
       </group>
 
-      {/* Côtés */}
       <group position={[L / 2, 0, 0]} rotation-z={a.walls}>
-        <Panel size={[H, t, W]} position={[H / 2, 0, 0]} />
+        <Panel
+          size={[H, t, W]}
+          position={[H / 2, 0, 0]}
+          map={textures.right}
+          {...shared}
+        />
       </group>
       <group position={[-L / 2, 0, 0]} rotation-z={-a.walls}>
-        <Panel size={[H, t, W]} position={[-H / 2, 0, 0]} />
+        <Panel
+          size={[H, t, W]}
+          position={[-H / 2, 0, 0]}
+          map={textures.left}
+          {...shared}
+        />
       </group>
     </group>
   );
