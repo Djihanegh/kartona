@@ -31,8 +31,8 @@ export function DielinePanel({
   };
 
   return (
-    <div className="absolute inset-0 flex gap-4 bg-stone-100 p-4 pt-16">
-      <section className="flex min-w-0 flex-1 flex-col gap-3 rounded-xl border border-stone-200 bg-white p-4">
+    <div className="absolute inset-0 flex flex-col gap-3 overflow-y-auto bg-stone-100 p-3 pt-14 md:flex-row md:gap-4 md:overflow-hidden md:p-4 md:pt-16">
+      <section className="flex min-h-[70%] min-w-0 flex-col gap-3 rounded-xl border border-stone-200 bg-white p-4 md:min-h-0 md:flex-1">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-4 text-xs text-stone-500">
             <span className="flex items-center gap-1.5">
@@ -78,7 +78,7 @@ export function DielinePanel({
         </p>
       </section>
 
-      <aside className="flex w-80 shrink-0 flex-col gap-4 rounded-xl border border-stone-200 bg-white p-5">
+      <aside className="flex w-full flex-col gap-4 rounded-xl border border-stone-200 bg-white p-5 md:w-80 md:shrink-0">
         <h2 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-500">
           Fiche technique
         </h2>

@@ -52,7 +52,7 @@ export function FoldBar() {
   };
 
   return (
-    <div className="absolute inset-x-4 bottom-4 flex items-center gap-3 rounded-xl border border-stone-200 bg-white/90 px-4 py-3 shadow-sm backdrop-blur">
+    <div className="absolute inset-x-3 bottom-3 flex items-center gap-2 rounded-xl border border-stone-200 bg-white/90 px-3 py-2 shadow-sm backdrop-blur md:inset-x-4 md:bottom-4 md:gap-3 md:px-4 md:py-3">
       <button
         type="button"
         onClick={playing ? stop : play}
@@ -60,7 +60,7 @@ export function FoldBar() {
       >
         {playing ? "Pause" : fold > 0.5 ? "Déplier" : "Plier"}
       </button>
-      <span className="text-xs text-stone-500">À plat</span>
+      <span className="hidden text-xs text-stone-500 sm:inline">À plat</span>
       <input
         type="range"
         min={0}
@@ -74,7 +74,7 @@ export function FoldBar() {
         }}
         className="flex-1 accent-kraft-700"
       />
-      <span className="text-xs text-stone-500">Fermée</span>
+      <span className="hidden text-xs text-stone-500 sm:inline">Fermée</span>
     </div>
   );
 }

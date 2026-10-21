@@ -6,6 +6,7 @@ import { Slider } from "../../components/ui/Slider";
 import { Segmented } from "../../components/ui/Segmented";
 import { LogoInput } from "../../components/ui/LogoInput";
 import { InkSection } from "./InkSection";
+import { Brand } from "../../components/ui/Brand";
 export function Sidebar() {
   const box = useEditor((s) => s.box);
   const design = useEditor((s) => s.design);
@@ -16,12 +17,9 @@ export function Sidebar() {
   const info = PROCESSES[design.process];
 
   return (
-    <aside className="flex h-full w-80 shrink-0 flex-col overflow-y-auto border-r border-stone-200 bg-white">
-      <header className="border-b border-stone-200 px-5 py-4">
-        <p className="text-xl font-extrabold tracking-tight">
-          K<span className="text-kraft-500">AR</span>TONA
-        </p>
-        <p className="text-xs text-stone-500">Aperçu avant impression</p>
+    <aside className="flex min-h-0 w-full flex-1 flex-col overflow-y-auto border-t border-stone-200 bg-white md:order-first md:h-full md:w-80 md:flex-none md:shrink-0 md:border-r md:border-t-0">
+      <header className="hidden border-b border-stone-200 px-5 py-4 md:block">
+        <Brand />
       </header>
 
       <Section title="Dimensions intérieures">
@@ -93,7 +91,10 @@ export function Sidebar() {
 
       <Section title="Design">
         <div className="flex flex-col gap-1.5">
-          <label htmlFor={brandId} className="text-sm text-stone-700">
+          <label
+            htmlFor={brandId}
+            className="rounded-lg border border-stone-300 px-3 py-2 text-base outline-none focus:border-kraft-500 focus:ring-2 focus:ring-kraft-100 md:text-sm"
+          >
             Nom de la marque
           </label>
           <input

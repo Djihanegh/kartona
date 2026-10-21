@@ -47,5 +47,6 @@ export function useFaceCanvases(
     logoColor,
     brandColor,
     marksColor,
+    logoInksKey,
   ]);
 }
