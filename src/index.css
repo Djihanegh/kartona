@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
+
+  --color-kraft-50: #faf6f0;
+  --color-kraft-100: #f1e7d8;
+  --color-kraft-300: #d4b48a;
+  --color-kraft-500: #b38956;
+  --color-kraft-700: #7a5a33;
+  --color-kraft-900: #3b2a17;
+}
+
 html,
 body,
 #root {
