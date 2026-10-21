@@ -1,8 +1,14 @@
-import { folder, useControls } from "leva";
+import { useControls } from "leva";
 import { Viewer } from "./features/viewer/Viewer";
 import { BoxModel } from "./features/box/BoxModel";
-import type { BoxParams, Design } from "./features/box/types";
 import { useFaceTextures } from "./features/print/useFaceTextures";
+import { useImage } from "./features/print/useImage";
+import type {
+  BoxParams,
+  Design,
+  PrintProcess,
+  Substrate,
+} from "./features/box/types";
 
 export default function App() {
   const params = useControls("Boîte", {
@@ -13,15 +19,28 @@ export default function App() {
     fold: { value: 1, min: 0, max: 1, step: 0.01 },
   }) as BoxParams;
 
-  const design = useControls("Design", {
-    impression: folder({
-      substrate: { value: "kraft", options: ["kraft", "white"] },
-      brand: "Dar Zitoun",
-      inkColor: "#245a35",
-    }),
-  }) as Design;
+  const look = useControls("Design", {
+    substrate: { value: "kraft", options: ["kraft", "white"] },
+    process: { value: "flexo", options: ["flexo", "offset"] },
+    inkColor: "#245a35",
+    brand: "Dar Zitoun",
+    logo: { image: undefined },
+    logoScale: { value: 55, min: 20, max: 90, step: 1 },
+  });
+
+  const logo = useImage(look.logo);
+
+  const design: Design = {
+    substrate: look.substrate as Substrate,
+    process: look.process as PrintProcess,
+    inkColor: look.inkColor,
+    brand: look.brand,
+    logo,
+    logoScale: look.logoScale,
+  };
 
   const textures = useFaceTextures(params, design);
+
   return (
     <div className="w-full h-full bg-stone-200">
       <Viewer>
