@@ -17,6 +17,7 @@ export function useFaceCanvases(
     brand: brandColor,
     marks: marksColor,
   } = design.colors;
+  const logoInksKey = design.logoInks?.join(",") ?? "";
 
   return useMemo(() => {
     const specs = faceSpecs({ length, width, height, flute });
@@ -27,6 +28,7 @@ export function useFaceCanvases(
       logo,
       logoScale,
       colors: { logo: logoColor, brand: brandColor, marks: marksColor },
+      logoInks: logoInksKey ? logoInksKey.split(",") : null,
     };
     const out = {} as FaceCanvases;
     for (const id of Object.keys(specs) as FaceId[])

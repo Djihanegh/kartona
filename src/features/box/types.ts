@@ -35,4 +35,5 @@ export interface Design {
   logo: HTMLImageElement | null;
   logoScale: number;
   brand: string;
+  logoInks: string[] | null; // null = logo en une encre ; sinon, encres de la séparation
 }

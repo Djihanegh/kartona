@@ -2,6 +2,7 @@ import type { Design, Substrate } from "../box/types";
 import type { FaceSpec } from "../box/faces";
 import { toSingleInk } from "./flexo";
 import { PROCESSES } from "./processes";
+import { separateToInks } from "./separation";
 
 const FONT = 'system-ui, -apple-system, "Segoe UI", sans-serif';
 
@@ -35,9 +36,10 @@ type LogoSource = HTMLImageElement | HTMLCanvasElement;
 // Offset : logo en couleurs d'origine. Flexo : logo converti en aplat d'une encre.
 function logoSource(d: Design): LogoSource | null {
   if (!d.logo) return null;
-  return PROCESSES[d.process].fullColor
-    ? d.logo
-    : toSingleInk(d.logo, d.colors.logo);
+  if (PROCESSES[d.process].fullColor) return d.logo; // offset : couleurs d'origine
+  return d.logoInks
+    ? separateToInks(d.logo, d.logoInks) // flexo : couleurs séparées
+    : toSingleInk(d.logo, d.colors.logo); // flexo : une seule encre
 }
 
 // Dessine le logo centré en (cx, cy), son plus grand côté mesurant `size`

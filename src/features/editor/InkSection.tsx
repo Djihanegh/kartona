@@ -2,6 +2,10 @@ import { useEditor } from "./store";
 import { PROCESSES, spotLimit } from "../print/processes";
 import type { PrintElement } from "../box/types";
 
+import { useImage } from "../print/useImage";
+import { extractPalette } from "../print/separation";
+import { Segmented } from "../../components/ui/Segmented";
+
 const ELEMENTS: { id: PrintElement; label: string }[] = [
   { id: "logo", label: "Logo" },
   { id: "brand", label: "Nom de la marque" },
@@ -17,13 +21,36 @@ export function InkSection() {
 
   const info = PROCESSES[design.process];
   const limit = spotLimit(design.process);
+
+  const setDesign = useEditor((s) => s.setDesign);
+  const applyLogoPalette = useEditor((s) => s.applyLogoPalette);
+  const logoImg = useImage(design.logoUrl ?? undefined);
+  const separated = !info.fullColor && design.logoMode === "separated";
+
   // En offset, le logo est en quadri : on ne lui attribue pas d'encre
-  const elements = info.fullColor
-    ? ELEMENTS.filter((e) => e.id !== "logo")
-    : ELEMENTS;
+  // Le logo n'a pas d'encre attribuée en offset (quadri) ni quand il garde ses couleurs
+  const elements =
+    info.fullColor || separated
+      ? ELEMENTS.filter((e) => e.id !== "logo")
+      : ELEMENTS;
 
   return (
     <>
+      {!info.fullColor && logoImg && (
+        <Segmented
+          label="Couleurs du logo"
+          value={design.logoMode}
+          options={[
+            { value: "separated", label: "Ses couleurs" },
+            { value: "single", label: "Une encre" },
+          ]}
+          onChange={(mode) =>
+            mode === "separated"
+              ? applyLogoPalette(extractPalette(logoImg, limit))
+              : setDesign({ logoMode: "single" })
+          }
+        />
+      )}
       {/* La palette */}
       <div className="flex flex-col gap-2">
         <div className="flex items-baseline justify-between">

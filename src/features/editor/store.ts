@@ -15,6 +15,7 @@ export interface DesignState {
   brand: string;
   logoUrl: string | null;
   logoScale: number;
+  logoMode: "single" | "separated";
 }
 
 interface EditorState {
@@ -31,6 +32,8 @@ interface EditorState {
   updateInk: (index: number, hex: string) => void;
   removeInk: (index: number) => void;
   assignInk: (element: PrintElement, index: number) => void;
+
+  applyLogoPalette: (colors: string[]) => void;
 }
 
 // Couleurs proposées quand on ajoute une encre
@@ -65,6 +68,7 @@ export const useEditor = create<EditorState>()((set) => ({
     brand: "Dar Zitoun",
     logoUrl: null,
     logoScale: 55,
+    logoMode: "single",
   },
   fold: 1,
 
@@ -125,4 +129,19 @@ export const useEditor = create<EditorState>()((set) => ({
     set((s) => ({
       design: { ...s.design, assign: { ...s.design.assign, [element]: index } },
     })),
+
+  // Les couleurs détectées dans le logo deviennent la palette
+  applyLogoPalette: (colors) =>
+    set((s) => {
+      const inks = colors.slice(0, spotLimit(s.design.process));
+      if (inks.length === 0) return {};
+      return {
+        design: {
+          ...s.design,
+          inks,
+          logoMode: "separated",
+          assign: clampAssign(s.design.assign, inks.length),
+        },
+      };
+    }),
 }));

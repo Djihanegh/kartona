@@ -21,6 +21,7 @@ export function useEditorArtwork() {
     brand: d.brand,
     logo,
     logoScale: d.logoScale,
+    logoInks: d.logoMode === "separated" ? d.inks : null,
   };
 
   const canvases = useFaceCanvases(box, design);
