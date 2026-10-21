@@ -15,6 +15,8 @@ export const FLUTE_THICKNESS: Record<Flute, number> = { E: 1.5, B: 3 };
 
 export type PrintProcess = "flexo" | "offset";
 
+export type PrintElement = "logo" | "brand" | "marks";
+
 export type Substrate = "kraft" | "white";
 
 export type FaceId =
@@ -29,8 +31,8 @@ export type FaceId =
 export interface Design {
   substrate: Substrate;
   process: PrintProcess;
+  colors: Record<PrintElement, string>; // couleur finale de chaque élément
   logo: HTMLImageElement | null;
   logoScale: number;
   brand: string;
-  inkColor: string;
 }

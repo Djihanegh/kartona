@@ -23,3 +23,10 @@ export const PROCESSES: Record<PrintProcess, ProcessInfo> = {
       "Quadri (CMJN) jusqu'à 2 Pantone en plus, pour les étuis et le contrecollage.",
   },
 };
+
+// Nombre d'encres en tons directs disponibles.
+// En offset, la quadri (CMJN) occupe 4 groupes de la machine.
+export function spotLimit(process: PrintProcess): number {
+  const info = PROCESSES[process];
+  return info.fullColor ? info.maxColors - 4 : info.maxColors;
+}

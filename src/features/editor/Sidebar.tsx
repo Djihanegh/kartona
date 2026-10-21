@@ -4,14 +4,14 @@ import { PROCESSES } from "../print/processes";
 import { Section } from "../../components/ui/Section";
 import { Slider } from "../../components/ui/Slider";
 import { Segmented } from "../../components/ui/Segmented";
-import { InkPicker } from "../../components/ui/InkPicker";
 import { LogoInput } from "../../components/ui/LogoInput";
-
+import { InkSection } from "./InkSection";
 export function Sidebar() {
   const box = useEditor((s) => s.box);
   const design = useEditor((s) => s.design);
   const setBox = useEditor((s) => s.setBox);
   const setDesign = useEditor((s) => s.setDesign);
+  const setProcess = useEditor((s) => s.setProcess);
   const brandId = useId();
   const info = PROCESSES[design.process];
 
@@ -83,16 +83,12 @@ export function Sidebar() {
             { value: "flexo", label: PROCESSES.flexo.label },
             { value: "offset", label: PROCESSES.offset.label },
           ]}
-          onChange={(process) => setDesign({ process })}
+          onChange={setProcess}
         />
         <p className="-mt-2 text-xs leading-relaxed text-stone-500">
           {info.description}
         </p>
-        <InkPicker
-          label={info.fullColor ? "Couleur des textes" : "Couleur d'encre"}
-          value={design.inkColor}
-          onChange={(inkColor) => setDesign({ inkColor })}
-        />
+        <InkSection />
       </Section>
 
       <Section title="Design">

@@ -10,10 +10,16 @@ export function BoxScene() {
   const fold = useEditor((s) => s.fold);
   const logo = useImage(d.logoUrl ?? undefined);
 
+  const pick = (i: number) => d.inks[i] ?? d.inks[0];
+
   const design: Design = {
     substrate: d.substrate,
     process: d.process,
-    inkColor: d.inkColor,
+    colors: {
+      logo: pick(d.assign.logo),
+      brand: pick(d.assign.brand),
+      marks: pick(d.assign.marks),
+    },
     brand: d.brand,
     logo,
     logoScale: d.logoScale,

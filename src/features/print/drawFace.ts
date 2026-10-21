@@ -37,7 +37,7 @@ function logoSource(d: Design): LogoSource | null {
   if (!d.logo) return null;
   return PROCESSES[d.process].fullColor
     ? d.logo
-    : toSingleInk(d.logo, d.inkColor);
+    : toSingleInk(d.logo, d.colors.logo);
 }
 
 // Dessine le logo centré en (cx, cy), son plus grand côté mesurant `size`
@@ -94,7 +94,7 @@ const painters: Record<FaceSpec["content"], Painter> = {
 
     if (logo) drawLogo(x, logo, w / 2, h / 2 - shift, size);
     if (hasText) {
-      x.fillStyle = d.inkColor;
+      x.fillStyle = d.colors.brand;
       x.textAlign = "center";
       x.textBaseline = "middle";
       fitText(x, d.brand, 800, w * 0.8, m * 0.09);
@@ -109,7 +109,7 @@ const painters: Record<FaceSpec["content"], Painter> = {
     const hasText = d.brand.trim().length > 0;
     const size = logo ? h * 0.55 * Math.min(1.3, d.logoScale / 55) : 0;
 
-    x.fillStyle = d.inkColor;
+    x.fillStyle = d.colors.brand;
     x.textAlign = "left";
     x.textBaseline = "middle";
     let textW = 0;
@@ -126,7 +126,7 @@ const painters: Record<FaceSpec["content"], Painter> = {
 
   // Côtés : pictogramme « haut »
   side: (x, w, h, d) => {
-    x.fillStyle = d.inkColor;
+    x.fillStyle = d.colors.marks;
     x.textAlign = "center";
     x.textBaseline = "middle";
     fitText(x, "↑ HAUT", 700, w * 0.6, Math.min(w, h) * 0.18);
@@ -135,7 +135,7 @@ const painters: Record<FaceSpec["content"], Painter> = {
 
   // Arrière : mention d'origine
   back: (x, w, h, d) => {
-    x.fillStyle = d.inkColor;
+    x.fillStyle = d.colors.marks;
     x.textAlign = "center";
     x.textBaseline = "middle";
     fitText(x, "Fabriqué en Algérie", 500, w * 0.5, h * 0.12);

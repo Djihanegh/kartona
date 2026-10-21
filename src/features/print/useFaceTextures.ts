@@ -11,42 +11,46 @@ export function useFaceTextures(
   design: Design,
 ): FaceTextures {
   const { length, width, height, flute } = params;
-  const { substrate, brand, inkColor, process, logo, logoScale } = design;
+  const { substrate, process, brand, logo, logoScale } = design;
+  const {
+    logo: logoColor,
+    brand: brandColor,
+    marks: marksColor,
+  } = design.colors;
 
   const textures = useMemo(() => {
     const specs = faceSpecs({ length, width, height, flute });
+    const d: Design = {
+      substrate,
+      process,
+      brand,
+      logo,
+      logoScale,
+      colors: { logo: logoColor, brand: brandColor, marks: marksColor },
+    };
     const out = {} as FaceTextures;
     for (const id of Object.keys(specs) as FaceId[]) {
-      const tex = new CanvasTexture(
-        drawFace(specs[id], {
-          substrate,
-          brand,
-          inkColor,
-          process,
-          logo,
-          logoScale,
-        }),
-      );
+      const tex = new CanvasTexture(drawFace(specs[id], d));
       tex.colorSpace = SRGBColorSpace;
       tex.anisotropy = 8;
       out[id] = tex;
     }
     return out;
-    // On ne redessine pas pendant le pliage : seules les dimensions et le design comptent
   }, [
     length,
     width,
     height,
     flute,
     substrate,
-    brand,
-    inkColor,
     process,
+    brand,
     logo,
     logoScale,
+    logoColor,
+    brandColor,
+    marksColor,
   ]);
 
-  // Libère la mémoire du GPU quand les textures sont remplacées
   useEffect(
     () => () => Object.values(textures).forEach((t) => t.dispose()),
     [textures],
