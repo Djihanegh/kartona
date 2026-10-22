@@ -1,5 +1,5 @@
 {
-  "name": "kartona",
+  "name": "@kartona/web",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@google/model-viewer": "^4.4.0",
+    "@kartona/shared": "^0.0.0",
     "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.2",
     "@tailwindcss/vite": "^4.3.3",

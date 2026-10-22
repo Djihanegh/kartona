@@ -1,24 +1,16 @@
-// --- La boîte (phase 1) ---
-export type Flute = "E" | "B";
+import type { PrintElement, PrintProcess, Substrate } from "@kartona/shared";
 
-export interface BoxParams {
-  length: number; // mm, intérieur
-  width: number; // mm
-  height: number; // mm
-  flute: Flute;
-  //fold: number; // 0 = à plat, 1 = fermée
-}
+// Types partagés avec l'API
+export type {
+  BoxParams,
+  Flute,
+  PrintElement,
+  PrintProcess,
+  Substrate,
+} from "@kartona/shared";
+export { FLUTE_THICKNESS } from "@kartona/shared";
 
-export const FLUTE_THICKNESS: Record<Flute, number> = { E: 1.5, B: 3 };
-
-// --- L'impression (phase 2) ---
-
-export type PrintProcess = "flexo" | "offset";
-
-export type PrintElement = "logo" | "brand" | "marks";
-
-export type Substrate = "kraft" | "white";
-
+// Types propres à l'éditeur (ils utilisent des objets du navigateur)
 export type FaceId =
   | "bottom"
   | "front"
@@ -31,9 +23,9 @@ export type FaceId =
 export interface Design {
   substrate: Substrate;
   process: PrintProcess;
-  colors: Record<PrintElement, string>; // couleur finale de chaque élément
+  colors: Record<PrintElement, string>;
+  brand: string;
   logo: HTMLImageElement | null;
   logoScale: number;
-  brand: string;
-  logoInks: string[] | null; // null = logo en une encre ; sinon, encres de la séparation
+  logoInks: string[] | null;
 }

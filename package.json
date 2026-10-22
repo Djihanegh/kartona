@@ -1,0 +1,16 @@
+{
+  "name": "kartona",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "postinstall": "npm run build:shared",
+    "build:shared": "npm run build -w @kartona/shared",
+    "dev:shared": "npm run dev -w @kartona/shared",
+    "dev:web": "npm run dev -w @kartona/web",
+    "build:web": "npm run build -w @kartona/web",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  }
+}

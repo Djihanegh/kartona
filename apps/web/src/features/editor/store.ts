@@ -1,22 +1,10 @@
 import { create } from "zustand";
-import type {
-  BoxParams,
-  PrintElement,
-  PrintProcess,
-  Substrate,
-} from "../box/types";
+import type { BoxParams, PrintElement, PrintProcess } from "../box/types";
 import { spotLimit } from "../print/processes";
 
-export interface DesignState {
-  substrate: Substrate;
-  process: PrintProcess;
-  inks: string[]; // palette : 1 à spotLimit(process) encres
-  assign: Record<PrintElement, number>; // index de l'encre de chaque élément
-  brand: string;
-  logoUrl: string | null;
-  logoScale: number;
-  logoMode: "single" | "separated";
-}
+import type { DesignSpec } from "@kartona/shared";
+
+export type DesignState = DesignSpec;
 
 interface EditorState {
   box: BoxParams;
